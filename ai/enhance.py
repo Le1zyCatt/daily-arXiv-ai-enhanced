@@ -98,8 +98,16 @@ def process_all_items(data: List[Dict], model_name: str, language: str, max_work
                 processed_data[idx] = result
             except Exception as e:
                 print(f"Item at index {idx} generated an exception: {e}", file=sys.stderr)
-                # 保持原始数据
-                processed_data[idx] = data[idx]
+                failed_item = data[idx]
+                failed_item['AI'] = {   # 👈 给失败的条目补个占位
+                    "tldr": "AI增强失败",
+                    "motivation": "",
+                    "method": "",
+                    "result": "",
+                    "conclusion": ""
+                }
+                processed_data[idx] = failed_item
+
     
     return processed_data
 

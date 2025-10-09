@@ -67,7 +67,11 @@ def process_single_item(chain, item: Dict, language: str) -> Dict:
 
 def process_all_items(data: List[Dict], model_name: str, language: str, max_workers: int) -> List[Dict]:
     """并行处理所有数据项"""
-    llm = ChatOpenAI(model=model_name).with_structured_output(Structure, method="function_calling")
+    deepseek_base_url = os.environ.get("DEEPSEEK_BASE_URL", "https://api.deepseek.com/v1") # 可以从环境变量获取
+    llm = ChatOpenAI(
+        model=model_name,
+        base_url=deepseek_base_url  # 👈 关键修改：指定 DeepSeek 的 API 地址
+    ).with_structured_output(Structure, method="function_calling")
     print('Connect to:', model_name, file=sys.stderr)
     
     prompt_template = ChatPromptTemplate.from_messages([
